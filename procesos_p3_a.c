@@ -1,10 +1,13 @@
-#include <sys/types.h>
-#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
+#include <time.h>
 
 int main() {
+
     pid_t pid1, pid2;
     time_t t;
 
@@ -12,27 +15,31 @@ int main() {
     pid1 = fork();
 
     if (pid1 < 0) {
-        // Error al crear el proceso
         perror("PROGRAMA 3: Error al crear el primer proceso hijo");
         exit(1);
     } else if (pid1 == 0) {
         // Este es el primer proceso hijo
         printf("PROGRAMA 3: Primer proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
+        exit(0);
     } else {
         // Crear el segundo proceso hijo
         pid2 = fork();
 
         if (pid2 < 0) {
-            // Error al crear el proceso
             perror("PROGRAMA 3: Error al crear el segundo proceso hijo");
             exit(1);
         } else if (pid2 == 0) {
             // Este es el segundo proceso hijo
             printf("PROGRAMA 3: Segundo proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
+            srand(time(NULL) ^ (getpid()<<16));
+            int wait_time = (rand() % 4) + 2;
+            printf("PROGRAMA 3: Segundo proceso hijo con PID: %d va a esperar: %d segundos\n", getpid(), wait_time);
+            sleep(wait_time);
+            exit(0);
         } else {
-            // Este es el proceso padre
-            t = time(NULL);
-            printf("PROGRAMA 3: Proceso padre con PID: %d creado en el instante: %s", getpid(), ctime(&t));
+            // Proceso padre
+            wait(NULL);
+            wait(NULL);
         }
     }
 
