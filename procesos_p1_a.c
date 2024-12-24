@@ -8,6 +8,9 @@
 
 int main() {
 
+    // El proceso padre mostrará un mensaje por pantalla en el que indique su PID e instante de creación
+    printf("PROGRAMA 1: Proceso padre creado con PID: %d, instante de creación: %ld\n", getpid(), time(NULL));
+
     pid_t pid1, pid2;
     time_t t;
 
