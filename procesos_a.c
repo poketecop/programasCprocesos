@@ -14,6 +14,11 @@ int init_semaphore(int semid, int semnum) {
 }
 
 int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        printf("Uso: %s <integer>\n", argv[0]);
+        return 1;
+    }
+
     int semid = semget(SEM_KEY, 3, IPC_CREAT | 0666);
 
     if (semid == -1) {
@@ -33,21 +38,21 @@ int main(int argc, char *argv[]) {
     // Ejecutar los 3 programas de procesos asíncronamente
     pid_t pid1 = fork();
     if (pid1 == 0) {
-        execl("./procesos_p1_a", "procesos_p1_a", (char *)NULL);
+        execl("./procesos_p1_a", "procesos_p1_a", argv[1], NULL);
         perror("Error al ejecutar procesos_p1_a");
         exit(1);
     }
 
     pid_t pid2 = fork();
     if (pid2 == 0) {
-        execl("./procesos_p2_a", "procesos_p2_a", (char *)NULL);
+        execl("./procesos_p2_a", "procesos_p2_a", argv[1], NULL);
         perror("Error al ejecutar procesos_p2_a");
         exit(1);
     }
 
     pid_t pid3 = fork();
     if (pid3 == 0) {
-        execl("./procesos_p3_a", "procesos_p3_a", (char *)NULL);
+        execl("./procesos_p3_a", "procesos_p3_a", argv[1], NULL);
         perror("Error al ejecutar procesos_p3_a");
         exit(1);
     }

@@ -18,10 +18,16 @@ void signal_semaphore(int semid, int semnum) {
     semop(semid, &sb, 1);
 }
 
-int main() {
-
+int main(int argc, char *argv[]) {
     // El proceso padre mostrará un mensaje por pantalla en el que indique su PID e instante de creación
     printf("PROGRAMA 2: Proceso padre creado con PID: %d, instante de creación: %ld\n", getpid(), time(NULL));
+
+    if (argc != 2) {
+        printf("Uso: %s <integer>\n", argv[0]);
+        return 1;
+    }
+
+    int vecesSincronizacion = atoi(argv[1]);
 
     int semid = semget(SEM_KEY, 3, 0666); // Obtener el semáforo existente
 
@@ -43,13 +49,15 @@ int main() {
         // Este es el primer proceso hijo
         printf("PROGRAMA 2: Primer proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
 
-        t = time(NULL);
+        for (int i = 0; i < vecesSincronizacion; i++) {
+           t = time(NULL);
 
-        // Esperar a que el semáforo 1 esté en verde
-        wait_semaphore(semid, 1);
+            // Esperar a que el semáforo 0 esté en verde
+            wait_semaphore(semid, 1);
 
-        printf("PROGRAMA 2: Primer proceso hijo con PID: %d ha esperado: %ld segundos\n", getpid(), time(NULL) - t);
-
+            printf("PROGRAMA 2: Primer proceso hijo con PID: %d ha esperado: %ld segundos en la iteración: %d\n", getpid(), time(NULL) - t, i);
+        }
+        
         exit(0);
     } else {
         // Crear el segundo proceso hijo
@@ -61,13 +69,20 @@ int main() {
         } else if (pid2 == 0) {
             // Este es el segundo proceso hijo
             printf("PROGRAMA 2: Segundo proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
+            // Semilla para el generador de números aleatorios
             srand(time(NULL) ^ (getpid()<<16));
-            int wait_time = (rand() % 4) + 2;
-            printf("PROGRAMA 2: Segundo proceso hijo con PID: %d va a esperar: %d segundos\n", getpid(), wait_time);
-            sleep(wait_time);
+            int wait_time;
+            
+            for (int i = 0; i < vecesSincronizacion; i++) {
+                wait_time = (rand() % 4) + 2;
 
-            // Poner en verde el semáforo 0
-            signal_semaphore(semid, 0);
+                printf("PROGRAMA 2: Segundo proceso hijo con PID: %d va a esperar: %d segundos en la iteración: %d\n", getpid(), wait_time, i);
+
+                sleep(wait_time);
+
+                // Poner en verde el semáforo 2
+                signal_semaphore(semid, 0);
+            }
 
             exit(0);
         } else {
