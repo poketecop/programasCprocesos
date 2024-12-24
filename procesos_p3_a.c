@@ -36,11 +36,8 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    pid_t pid1, pid2;
-    time_t t;
-
     // Crear el primer proceso hijo
-    pid1 = fork();
+    pid_t pid1 = fork();
 
     if (pid1 < 0) {
         perror("PROGRAMA 3: Error al crear el primer proceso hijo");
@@ -49,8 +46,10 @@ int main(int argc, char *argv[]) {
         // Este es el primer proceso hijo
         printf("PROGRAMA 3: Primer proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
 
-        for (int i = 0; i < vecesSincronizacion; i++) {
-           t = time(NULL);
+        time_t t;
+        int i;
+        for (i = 0; i < vecesSincronizacion; i++) {
+            t = time(NULL);
 
             // Esperar a que el semáforo 0 esté en verde
             wait_semaphore(semid, 2);
@@ -61,7 +60,7 @@ int main(int argc, char *argv[]) {
         exit(0);
     } else {
         // Crear el segundo proceso hijo
-        pid2 = fork();
+        pid_t pid2 = fork();
 
         if (pid2 < 0) {
             perror("PROGRAMA 3: Error al crear el segundo proceso hijo");
@@ -69,11 +68,13 @@ int main(int argc, char *argv[]) {
         } else if (pid2 == 0) {
             // Este es el segundo proceso hijo
             printf("PROGRAMA 3: Segundo proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
+            
             // Semilla para el generador de números aleatorios
             srand(time(NULL) ^ (getpid()<<16));
+
             int wait_time;
-            
-            for (int i = 0; i < vecesSincronizacion; i++) {
+            int i;
+            for (i = 0; i < vecesSincronizacion; i++) {
                 wait_time = (rand() % 4) + 2;
 
                 printf("PROGRAMA 3: Segundo proceso hijo con PID: %d va a esperar: %d segundos en la iteración: %d\n", getpid(), wait_time, i);
