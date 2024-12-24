@@ -9,7 +9,7 @@
 
 #define SEM_KEY 0x1234
 
-void init_semaphore(int semid, int semnum) {
+int init_semaphore(int semid, int semnum) {
     semctl(semid, semnum, SETVAL, 0);
 }
 
@@ -21,11 +21,9 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    printf("PROGRAMA EJECUTADOR: Conjunto de semáforos creado con ID: %d\n", semid);
-
+    init_semaphore(semid, 0);
     init_semaphore(semid, 1);
     init_semaphore(semid, 2);
-    init_semaphore(semid, 3);
 
     // Compilar los 3 programas de procesos
     system("gcc -o procesos_p1_a procesos_p1_a.c");

@@ -32,8 +32,6 @@ int main() {
         perror("Error al obtener el semáforo");
         exit(1);
     }
-
-    printf("PROGRAMA 3: Conjunto de semáforos obtenido con ID: %d\n", semid);
     
     pid_t pid1, pid2;
     time_t t;
@@ -49,12 +47,8 @@ int main() {
         printf("PROGRAMA 3: Primer proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
 
         t = time(NULL);
-
-        // Debug: Print semaphore value before waiting
-        printf("PROGRAMA 3: Valor del semáforo 3 antes de esperar: %d\n", get_semaphore_value(semid, 3));
-
-        // Esperar a que el semáforo 3 esté en verde
-        wait_semaphore(semid, 3);
+        // Esperar a que el semáforo 2 esté en verde
+        wait_semaphore(semid, 2);
 
         // Debug: Print semaphore value after waiting
         printf("PROGRAMA 3: Valor del semáforo 3 después de esperar: %d\n", get_semaphore_value(semid, 3));
@@ -77,8 +71,8 @@ int main() {
             printf("PROGRAMA 3: Segundo proceso hijo con PID: %d va a esperar: %d segundos\n", getpid(), wait_time);
             sleep(wait_time);
 
-            // Poner en verde el semáforo 2
-            signal_semaphore(semid, 2);
+            // Poner en verde el semáforo 1
+            signal_semaphore(semid, 1);
 
             exit(0);
         } else {

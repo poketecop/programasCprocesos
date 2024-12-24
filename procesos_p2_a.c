@@ -30,8 +30,6 @@ int main() {
         exit(1);
     }
 
-    printf("PROGRAMA 2: Conjunto de semáforos obtenido con ID: %d\n", semid);
-
     pid_t pid1, pid2;
     time_t t;
 
@@ -47,8 +45,8 @@ int main() {
 
         t = time(NULL);
 
-        // Esperar a que el semáforo 2 esté en verde
-        wait_semaphore(semid, 2);
+        // Esperar a que el semáforo 1 esté en verde
+        wait_semaphore(semid, 1);
 
         printf("PROGRAMA 2: Primer proceso hijo con PID: %d ha esperado: %ld segundos\n", getpid(), time(NULL) - t);
 
@@ -68,8 +66,8 @@ int main() {
             printf("PROGRAMA 2: Segundo proceso hijo con PID: %d va a esperar: %d segundos\n", getpid(), wait_time);
             sleep(wait_time);
 
-            // Poner en verde el semáforo 1
-            signal_semaphore(semid, 1);
+            // Poner en verde el semáforo 0
+            signal_semaphore(semid, 0);
 
             exit(0);
         } else {
