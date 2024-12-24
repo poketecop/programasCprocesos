@@ -18,6 +18,11 @@ void signal_semaphore(int semid, int semnum) {
     semop(semid, &sb, 1);
 }
 
+
+int get_semaphore_value(int semid, int semnum) {
+    return semctl(semid, semnum, GETVAL);
+}
+
 int main() {
 
     // El proceso padre mostrará un mensaje por pantalla en el que indique su PID e instante de creación
@@ -39,8 +44,15 @@ int main() {
         printf("PROGRAMA 3: Primer proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
 
         t = time(NULL);
+
+        // Debug: Print semaphore value before waiting
+        printf("PROGRAMA 3: Valor del semáforo 3 antes de esperar: %d\n", get_semaphore_value(semid, 3));
+
         // Esperar a que el semáforo 3 esté en verde
         wait_semaphore(semid, 3);
+
+        // Debug: Print semaphore value after waiting
+        printf("PROGRAMA 3: Valor del semáforo 3 después de esperar: %d\n", get_semaphore_value(semid, 3));
         
         printf("PROGRAMA 3: Primer proceso hijo con PID: %d ha esperado: %ld segundos\n", getpid(), time(NULL) - t);
 
