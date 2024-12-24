@@ -21,6 +21,8 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
+    printf("PROGRAMA EJECUTADOR: Conjunto de semáforos creado con ID: %d\n", semid);
+
     init_semaphore(semid, 1);
     init_semaphore(semid, 2);
     init_semaphore(semid, 3);

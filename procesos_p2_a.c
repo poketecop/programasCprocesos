@@ -25,6 +25,13 @@ int main() {
 
     int semid = semget(SEM_KEY, 3, 0666); // Obtener el semáforo existente
 
+    if (semid == -1) {
+        perror("Error al obtener el semáforo");
+        exit(1);
+    }
+
+    printf("PROGRAMA 2: Conjunto de semáforos obtenido con ID: %d\n", semid);
+
     pid_t pid1, pid2;
     time_t t;
 

@@ -24,12 +24,17 @@ int get_semaphore_value(int semid, int semnum) {
 }
 
 int main() {
-
     // El proceso padre mostrará un mensaje por pantalla en el que indique su PID e instante de creación
     printf("PROGRAMA 3: Proceso padre creado con PID: %d, instante de creación: %ld\n", getpid(), time(NULL));
 
     int semid = semget(SEM_KEY, 3, 0666); // Obtener el semáforo existente
+    if (semid == -1) {
+        perror("Error al obtener el semáforo");
+        exit(1);
+    }
 
+    printf("PROGRAMA 3: Conjunto de semáforos obtenido con ID: %d\n", semid);
+    
     pid_t pid1, pid2;
     time_t t;
 
