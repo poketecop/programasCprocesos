@@ -30,10 +30,32 @@ int main(int argc, char *argv[]) {
     system("gcc -o procesos_p2_a procesos_p2_a.c");
     system("gcc -o procesos_p3_a procesos_p3_a.c");
 
-    // Ejecutar los 3 programas de procesos
-    system("./procesos_p1_a");
-    system("./procesos_p2_a");
-    system("./procesos_p3_a");
-    
+    // Ejecutar los 3 programas de procesos asíncronamente
+    pid_t pid1 = fork();
+    if (pid1 == 0) {
+        execl("./procesos_p1_a", "procesos_p1_a", (char *)NULL);
+        perror("Error al ejecutar procesos_p1_a");
+        exit(1);
+    }
+
+    pid_t pid2 = fork();
+    if (pid2 == 0) {
+        execl("./procesos_p2_a", "procesos_p2_a", (char *)NULL);
+        perror("Error al ejecutar procesos_p2_a");
+        exit(1);
+    }
+
+    pid_t pid3 = fork();
+    if (pid3 == 0) {
+        execl("./procesos_p3_a", "procesos_p3_a", (char *)NULL);
+        perror("Error al ejecutar procesos_p3_a");
+        exit(1);
+    }
+
+    // Esperar a que los procesos hijos terminen
+    wait(NULL);
+    wait(NULL);
+    wait(NULL);
+
     return 0;
 }
