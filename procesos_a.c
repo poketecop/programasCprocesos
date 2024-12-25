@@ -13,12 +13,17 @@ int init_semaphore(int semid, int semnum) {
     semctl(semid, semnum, SETVAL, 0);
 }
 
+int remove_semaphore(int semid) {
+    semctl(semid, 0, IPC_RMID);
+}
+
 int main(int argc, char *argv[]) {
     if (argc != 2) {
         printf("Uso: %s <integer>\n", argv[0]);
         return 1;
     }
 
+    // Usamos 3 semáforos ya que son 3 sincronizaciones independientes
     int semid = semget(SEM_KEY, 3, IPC_CREAT | 0666);
 
     if (semid == -1) {
@@ -61,6 +66,10 @@ int main(int argc, char *argv[]) {
     wait(NULL);
     wait(NULL);
     wait(NULL);
+
+    // Eliminar los semáforos
+    // TODO: Probar
+    remove_semaphore(semid);
 
     return 0;
 }
