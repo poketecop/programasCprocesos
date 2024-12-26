@@ -54,8 +54,6 @@ int main(int argc, char *argv[]) {
                 exit(1);
             }
 
-            // TODO: Esperar por el mensaje de que el segundo hijo del programa 3 ha terminado
-
             printf("PROGRAMA 2: Primer proceso hijo con PID: %d ha esperado: %ld segundos en la iteración: %d\n", getpid(), time(NULL) - t, i);
         }
         

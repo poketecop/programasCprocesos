@@ -26,6 +26,7 @@ int main(int argc, char *argv[]) {
     system("gcc -o procesos_p3_b procesos_p3_b.c");
 
     // Crear la cola de mensajes
+    // Con una es suficiente ya que se puede diferenciar el mensaje por el campo mtype
     int msgid = msgget(MSG_KEY, IPC_CREAT | 0666);
     if (msgid == -1) {
         perror("Error al crear la cola de mensajes");
