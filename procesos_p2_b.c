@@ -6,6 +6,13 @@
 #include <sys/sem.h>
 #include <time.h>
 
+#define MSG_KEY 1234
+
+struct msgbuf {
+    long mtype;
+    char mtext[1];
+};
+
 int main(int argc, char *argv[]) {
     // El proceso padre mostrará un mensaje por pantalla en el que indique su PID e instante de creación
     printf("PROGRAMA 2: Proceso padre creado con PID: %d, instante de creación: %ld\n", getpid(), time(NULL));
