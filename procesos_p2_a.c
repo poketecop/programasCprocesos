@@ -6,12 +6,17 @@
 #include <sys/sem.h>
 #include <time.h>
 
-#define MSG_KEY 1234
+#define SEM_KEY 0x1234
 
-struct msgbuf {
-    long mtype;
-    char mtext[1];
-};
+void wait_semaphore(int semid, int semnum) {
+    struct sembuf sb = {semnum, -1, 0};
+    semop(semid, &sb, 1);
+}
+
+void signal_semaphore(int semid, int semnum) {
+    struct sembuf sb = {semnum, 1, 0};
+    semop(semid, &sb, 1);
+}
 
 int main(int argc, char *argv[]) {
     // El proceso padre mostrará un mensaje por pantalla en el que indique su PID e instante de creación
@@ -24,10 +29,10 @@ int main(int argc, char *argv[]) {
 
     int vecesSincronizacion = atoi(argv[1]);
 
-    // Obtener la cola de mensajes
-    int msgid = msgget(MSG_KEY, 0666);
-    if (msgid == -1) {
-        perror("Error al obtener la cola de mensajes");
+    int semid = semget(SEM_KEY, 3, 0666); // Obtener el semáforo existente
+
+    if (semid == -1) {
+        perror("Error al obtener el semáforo");
         exit(1);
     }
 
@@ -41,18 +46,13 @@ int main(int argc, char *argv[]) {
         // Este es el primer proceso hijo
         printf("PROGRAMA 2: Primer proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
 
-        struct msgbuf msg;
         time_t t;
         int i;
         for (i = 0; i < vecesSincronizacion; i++) {
-            t = time(NULL);
+           t = time(NULL);
 
-            // Esperar por el mensaje de que el segundo hijo del programa 3 ha terminado
-            if (msgrcv(msgid, &msg, sizeof(msg.mtext), 3, 0) == -1) {
-                perror("Error al recibir mensaje");
-                exit(1);
-            }
-
+            // Esperar a que el semáforo 1 esté en verde
+            wait_semaphore(semid, 1);
 
             printf("PROGRAMA 2: Primer proceso hijo con PID: %d ha esperado: %ld segundos en la iteración: %d\n", getpid(), time(NULL) - t, i);
         }
@@ -72,8 +72,6 @@ int main(int argc, char *argv[]) {
             // Semilla para el generador de números aleatorios
             srand(time(NULL) ^ (getpid()<<16));
 
-            struct msgbuf msg;
-            msg.mtype = 2;
             int wait_time;
             int i;
             for (i = 0; i < vecesSincronizacion; i++) {
@@ -83,11 +81,8 @@ int main(int argc, char *argv[]) {
 
                 sleep(wait_time);
 
-                // Mandar mensaje de que el segundo hijo del programa 2 ha terminado
-                if (msgsnd(msgid, &msg, sizeof(msg.mtext), 0) == -1) {
-                    perror("Error al enviar mensaje");
-                    exit(1);
-                }
+                // Poner en verde el semáforo 0
+                signal_semaphore(semid, 0);
             }
 
             exit(0);

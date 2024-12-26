@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
         for (i = 0; i < vecesSincronizacion; i++) {
             t = time(NULL);
 
-            // Esperar a que el semáforo 0 esté en verde
+            // Esperar a que el semáforo 2 esté en verde
             wait_semaphore(semid, 2);
 
             printf("PROGRAMA 3: Primer proceso hijo con PID: %d ha esperado: %ld segundos en la iteración: %d\n", getpid(), time(NULL) - t, i);
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
 
                 sleep(wait_time);
 
-                // Poner en verde el semáforo 2
+                // Poner en verde el semáforo 1
                 signal_semaphore(semid, 1);
             }
 

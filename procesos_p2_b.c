@@ -17,8 +17,10 @@ int main(int argc, char *argv[]) {
 
     int vecesSincronizacion = atoi(argv[1]);
 
-    if (semid == -1) {
-        perror("Error al obtener el semáforo");
+    // Obtener la cola de mensajes
+    int msgid = msgget(MSG_KEY, 0666);
+    if (msgid == -1) {
+        perror("Error al obtener la cola de mensajes");
         exit(1);
     }
 
@@ -32,11 +34,18 @@ int main(int argc, char *argv[]) {
         // Este es el primer proceso hijo
         printf("PROGRAMA 2: Primer proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
         
+        struct msgbuf msg;
         time_t t;
         int i;
         for (i = 0; i < vecesSincronizacion; i++) {
             
             t = time(NULL);
+            
+            // Esperar por el mensaje de que el segundo hijo del programa 3 ha terminado
+            if (msgrcv(msgid, &msg, sizeof(msg.mtext), 3, 0) == -1) {
+                perror("Error al recibir mensaje");
+                exit(1);
+            }
 
             // TODO: Esperar por el mensaje de que el segundo hijo del programa 3 ha terminado
 
@@ -58,6 +67,8 @@ int main(int argc, char *argv[]) {
             // Semilla para el generador de números aleatorios
             srand(time(NULL) ^ (getpid()<<16));
             
+            struct msgbuf msg;
+            msg.mtype = 2;
             int wait_time;
             int i;
             for (i = 0; i < vecesSincronizacion; i++) {
@@ -67,7 +78,11 @@ int main(int argc, char *argv[]) {
 
                 sleep(wait_time);
 
-                // TODO: Mandar mensaje de que el segundo hijo del programa 2 ha terminado
+                // Mandar mensaje de que el segundo hijo del programa 2 ha terminado
+                if (msgsnd(msgid, &msg, sizeof(msg.mtext), 0) == -1) {
+                    perror("Error al enviar mensaje");
+                    exit(1);
+                }
             }
 
             exit(0);

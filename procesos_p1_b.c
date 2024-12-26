@@ -48,8 +48,12 @@ int main(int argc, char *argv[]) {
             
             t = time(NULL);
 
-            // TODO: Esperar por el mensaje de que el segundo hijo del programa 2 ha terminado
-
+            // Esperar por el mensaje de que el segundo hijo del programa 2 ha terminado
+            if (msgrcv(msgid, &msg, sizeof(msg.mtext), 2, 0) == -1) {
+                perror("Error al recibir mensaje");
+                exit(1);
+            }
+            
             printf("PROGRAMA 1: Primer proceso hijo con PID: %d ha esperado: %ld segundos en la iteración: %d\n", getpid(), time(NULL) - t, i);
         }
         
