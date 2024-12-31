@@ -31,13 +31,13 @@ int main(int argc, char *argv[]) {
         int i;
         for (i = 0; i < vecesSincronizacion; i++) {
             data->number = rand() % 10 + 1;
-            printf("COMUNICACION: ITERACIÓN %d: PROGRAMA 1: 1er proceso hijo escribe: %d\n", i, data->number);
+            printf("COMUNICACION: ITERACION %d: PROGRAMA 1: 1er proceso hijo escribe: %d\n", i, data->number);
             // Se usan los semáforos 0 y 1 para que no se pisen
             // Poner el semáforo 0 en verde
             signal_semaphore(semid, 0);
             // Esperar a que el semáforo 1 esté en verde
             wait_semaphore(semid, 1);
-            printf("COMUNICACION: ITERACIÓN %d: PROGRAMA 1: 1er proceso hijo lee respuesta: %d\n", i, data->response);
+            printf("COMUNICACION: ITERACION %d: PROGRAMA 1: 1er proceso hijo lee respuesta: %d\n", i, data->response);
         }
         detach_shared_memory(data);
         exit(0);
@@ -56,9 +56,9 @@ int main(int argc, char *argv[]) {
             for (i = 0; i < vecesSincronizacion; i++) {
                 // Esperar a que el semáforo 4 esté en verde
                 wait_semaphore(semid, 4);
-                printf("COMUNICACION: ITERACIÓN %d: PROGRAMA 1: 2do proceso hijo lee: %d\n", i, data->number);
+                printf("COMUNICACION: ITERACION %d: PROGRAMA 1: 2do proceso hijo lee: %d\n", i, data->number);
                 data->response = data->number * 2;
-                printf("COMUNICACION: ITERACIÓN %d: PROGRAMA 1: 2do proceso hijo escribe respuesta: %d\n", i, data->response);
+                printf("COMUNICACION: ITERACION %d: PROGRAMA 1: 2do proceso hijo escribe respuesta: %d\n", i, data->response);
                 // Poner el semáforo 5 en verde
                 signal_semaphore(semid, 5);
             }
