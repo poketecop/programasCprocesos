@@ -47,6 +47,7 @@ int main(int argc, char *argv[]) {
     init_semaphore(semid, 4);
     init_semaphore(semid, 5);
 
+    // Crear las 3 memorias compartidas. Una para cada comunicación
     create_shared_memory(SHM_KEY1);
     create_shared_memory(SHM_KEY2);
     create_shared_memory(SHM_KEY3);

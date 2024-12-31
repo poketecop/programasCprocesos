@@ -24,9 +24,11 @@ int main(int argc, char *argv[]) {
     } else if (pid1 == 0) {
         printf("CREACION: PROGRAMA 1: 1er proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
 
+        // Obtener y conectar a la memoria compartida correspondiente
         int shmid = get_shared_memory(SHM_KEY1);
         shared_data *data = attach_shared_memory(shmid);
 
+        // Semilla para el generador de números aleatorios
         srand(time(NULL) ^ (getpid()<<16));
         int i;
         for (i = 0; i < vecesSincronizacion; i++) {
@@ -49,6 +51,7 @@ int main(int argc, char *argv[]) {
         } else if (pid2 == 0) {
             printf("CREACION: PROGRAMA 1: 2do proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
 
+            // Obtener y conectar a la memoria compartida correspondiente
             int shmid = get_shared_memory(SHM_KEY3);
             shared_data *data = attach_shared_memory(shmid);
 
