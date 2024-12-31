@@ -68,7 +68,6 @@ int main(int argc, char *argv[]) {
     wait(NULL);
 
     // Eliminar los semáforos
-    // TODO: Probar
     remove_semaphore(semid);
 
     return 0;
