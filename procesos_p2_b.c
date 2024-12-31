@@ -31,15 +31,15 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    // Crear el primer proceso hijo
+    // Crear el 1er proceso hijo
     pid_t pid1 = fork();
 
     if (pid1 < 0) {
-        perror("PROGRAMA 2: Error al crear el primer proceso hijo");
+        perror("PROGRAMA 2: Error al crear el 1er proceso hijo");
         exit(1);
     } else if (pid1 == 0) {
-        // Este es el primer proceso hijo
-        printf("PROGRAMA 2: Primer proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
+        // Este es el 1er proceso hijo
+        printf("PROGRAMA 2: 1er proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
         
         struct msgbuf msg;
         time_t t;
@@ -48,26 +48,26 @@ int main(int argc, char *argv[]) {
             
             t = time(NULL);
             
-            // Esperar por el mensaje de que el segundo hijo del programa 3 ha terminado
+            // Esperar por el mensaje de que el 2do hijo del programa 3 ha terminado
             if (msgrcv(msgid, &msg, sizeof(msg.mtext), 3, 0) == -1) {
                 perror("Error al recibir mensaje");
                 exit(1);
             }
 
-            printf("PROGRAMA 2: Primer proceso hijo con PID: %d ha esperado: %ld segundos en la iteración: %d\n", getpid(), time(NULL) - t, i);
+            printf("PROGRAMA 2: 1er proceso hijo con PID: %d ha esperado: %ld 2dos en la iteración: %d\n", getpid(), time(NULL) - t, i);
         }
         
         exit(0);
     } else {
-        // Crear el segundo proceso hijo
+        // Crear el 2do proceso hijo
         pid_t pid2 = fork();
 
         if (pid2 < 0) {
-            perror("PROGRAMA 2: Error al crear el segundo proceso hijo");
+            perror("PROGRAMA 2: Error al crear el 2do proceso hijo");
             exit(1);
         } else if (pid2 == 0) {
-            // Este es el segundo proceso hijo
-            printf("PROGRAMA 2: Segundo proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
+            // Este es el 2do proceso hijo
+            printf("PROGRAMA 2: 2do proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
             
             // Semilla para el generador de números aleatorios
             srand(time(NULL) ^ (getpid()<<16));
@@ -79,11 +79,11 @@ int main(int argc, char *argv[]) {
             for (i = 0; i < vecesSincronizacion; i++) {
                 wait_time = (rand() % 4) + 2;
 
-                printf("PROGRAMA 2: Segundo proceso hijo con PID: %d va a esperar: %d segundos en la iteración: %d\n", getpid(), wait_time, i);
+                printf("PROGRAMA 2: 2do proceso hijo con PID: %d va a esperar: %d 2dos en la iteración: %d\n", getpid(), wait_time, i);
 
                 sleep(wait_time);
 
-                // Mandar mensaje de que el segundo hijo del programa 2 ha terminado
+                // Mandar mensaje de que el 2do hijo del programa 2 ha terminado
                 if (msgsnd(msgid, &msg, sizeof(msg.mtext), 0) == -1) {
                     perror("Error al enviar mensaje");
                     exit(1);

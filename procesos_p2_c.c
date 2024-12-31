@@ -19,10 +19,10 @@ int main(int argc, char *argv[]) {
 
     pid_t pid1 = fork();
     if (pid1 < 0) {
-        perror("PROGRAMA 2: Error al crear el primer proceso hijo");
+        perror("PROGRAMA 2: Error al crear el 1er proceso hijo");
         exit(1);
     } else if (pid1 == 0) {
-        printf("PROGRAMA 2: Primer proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
+        printf("PROGRAMA 2: 1er proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
 
         int shmid = get_shared_memory(SHM_KEY2);
         shared_data *data = attach_shared_memory(shmid);
@@ -31,23 +31,23 @@ int main(int argc, char *argv[]) {
         int i; 
         for (i = 0; i < vecesSincronizacion; i++) {
             data->number = rand() % 10 + 1;
-            printf("PROGRAMA 2: Primer proceso hijo escribe: %d\n", data->number);
+            printf("PROGRAMA 2: 1er proceso hijo escribe: %d\n", data->number);
             // Se usan los semáforos 2 y 3 para que no se pisen
             // Poner el semáforo 2 en verde
             signal_semaphore(semid, 2);
             // Esperar a que el semáforo 3 esté en verde
             wait_semaphore(semid, 3);
-            printf("PROGRAMA 2: Primer proceso hijo lee respuesta: %d\n", data->response);
+            printf("PROGRAMA 2: 1er proceso hijo lee respuesta: %d\n", data->response);
         }
         detach_shared_memory(data);
         exit(0);
     } else {
         pid_t pid2 = fork();
         if (pid2 < 0) {
-            perror("PROGRAMA 2: Error al crear el segundo proceso hijo");
+            perror("PROGRAMA 2: Error al crear el 2do proceso hijo");
             exit(1);
         } else if (pid2 == 0) {
-            printf("PROGRAMA 2: Segundo proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
+            printf("PROGRAMA 2: 2do proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
 
             int shmid = get_shared_memory(SHM_KEY1);
             shared_data *data = attach_shared_memory(shmid);
@@ -56,9 +56,9 @@ int main(int argc, char *argv[]) {
             for (i = 0; i < vecesSincronizacion; i++) {
                 // Esperar a que el semáforo 0 esté en verde
                 wait_semaphore(semid, 0);
-                printf("PROGRAMA 2: Segundo proceso hijo lee: %d\n", data->number);
+                printf("PROGRAMA 2: 2do proceso hijo lee: %d\n", data->number);
                 data->response = data->number * 2;
-                printf("PROGRAMA 2: Segundo proceso hijo escribe respuesta: %d\n", data->response);
+                printf("PROGRAMA 2: 2do proceso hijo escribe respuesta: %d\n", data->response);
                 // Poner el semáforo 1 en verde
                 signal_semaphore(semid, 1);
             }
