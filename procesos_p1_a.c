@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     } else if (pid1 == 0) {
         // Este es el 1er proceso hijo
-        printf("CREACION: PROGRAMA 1: 1er proceso hijo do con PID: %d, PID del padre: %d\n", getpid(), getppid());
+        printf("CREACION: PROGRAMA 1: 1er proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
         
         time_t t;
         int i;
@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
             exit(1);
         } else if (pid2 == 0) {
             // Este es el 2do proceso hijo
-            printf("CREACION: PROGRAMA 1: 2do proceso hijo do con PID: %d, PID del padre: %d\n", getpid(), getppid());
+            printf("CREACION: PROGRAMA 1: 2do proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
             
             // Semilla para el generador de números aleatorios
             srand(time(NULL) ^ (getpid()<<16));

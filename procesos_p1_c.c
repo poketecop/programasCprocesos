@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
         perror("CREACION: PROGRAMA 1: Error al r el 1er proceso hijo");
         exit(1);
     } else if (pid1 == 0) {
-        printf("CREACION: PROGRAMA 1: 1er proceso hijo do con PID: %d, PID del padre: %d\n", getpid(), getppid());
+        printf("CREACION: PROGRAMA 1: 1er proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
 
         int shmid = get_shared_memory(SHM_KEY1);
         shared_data *data = attach_shared_memory(shmid);
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
             perror("CREACION: PROGRAMA 1: Error al r el 2do proceso hijo");
             exit(1);
         } else if (pid2 == 0) {
-            printf("CREACION: PROGRAMA 1: 2do proceso hijo do con PID: %d, PID del padre: %d\n", getpid(), getppid());
+            printf("CREACION: PROGRAMA 1: 2do proceso hijo creado con PID: %d, PID del padre: %d\n", getpid(), getppid());
 
             int shmid = get_shared_memory(SHM_KEY3);
             shared_data *data = attach_shared_memory(shmid);
