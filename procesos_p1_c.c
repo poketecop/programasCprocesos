@@ -28,7 +28,8 @@ int main(int argc, char *argv[]) {
         shared_data *data = attach_shared_memory(shmid);
 
         srand(time(NULL) ^ (getpid()<<16));
-        for (int i = 0; i < vecesSincronizacion; i++) {
+        int i;
+        for (i = 0; i < vecesSincronizacion; i++) {
             data->number = rand() % 10 + 1;
             printf("PROGRAMA 1: Primer proceso hijo escribe: %d\n", data->number);
             // Se usan los semáforos 0 y 1 para que no se pisen
@@ -51,7 +52,8 @@ int main(int argc, char *argv[]) {
             int shmid = get_shared_memory(SHM_KEY3);
             shared_data *data = attach_shared_memory(shmid);
 
-            for (int i = 0; i < vecesSincronizacion; i++) {
+            int i;
+            for (i = 0; i < vecesSincronizacion; i++) {
                 // Esperar a que el semáforo 4 esté en verde
                 wait_semaphore(semid, 4);
                 printf("PROGRAMA 1: Segundo proceso hijo lee: %d\n", data->number);
