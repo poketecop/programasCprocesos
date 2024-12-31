@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
             // Esperar a que el semáforo 2 esté en verde
             wait_semaphore(semid, 2);
 
-            printf("COMUNICACION: ITERACIÓN %d: PROGRAMA 3: 1er proceso hijo con PID: %d ha esperado: %ld 2dos\n", i, getpid(), time(NULL) - t);
+            printf("COMUNICACION: ITERACIÓN %d: PROGRAMA 3: 1er proceso hijo con PID: %d ha esperado: %ld segundos\n", i, getpid(), time(NULL) - t);
         }
         
         exit(0);
@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
             for (i = 0; i < vecesSincronizacion; i++) {
                 wait_time = (rand() % 4) + 2;
 
-                printf("COMUNICACION: ITERACIÓN %d: PROGRAMA 3: 2do proceso hijo con PID: %d va a esperar: %d 2dos\n", i, getpid(), wait_time);
+                printf("COMUNICACION: ITERACIÓN %d: PROGRAMA 3: 2do proceso hijo con PID: %d va a esperar: %d segundos\n", i, getpid(), wait_time);
 
                 sleep(wait_time);
 
