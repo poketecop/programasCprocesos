@@ -6,7 +6,7 @@
 #include "shared_memory.h"
 
 int main(int argc, char *argv[]) {
-    printf("CREACION: PROGRAMA 1: Proceso padre creado con PID: %d, instante de ción: %ld\n", getpid(), time(NULL));
+    printf("CREACION: PROGRAMA 1: Proceso padre creado con PID: %d, instante de creación: %ld\n", getpid(), time(NULL));
 
     if (argc != 2) {
         printf("Uso: %s <integer>\n", argv[0]);
@@ -31,13 +31,13 @@ int main(int argc, char *argv[]) {
         int i;
         for (i = 0; i < vecesSincronizacion; i++) {
             data->number = rand() % 10 + 1;
-            printf("COMUNICACION: PROGRAMA 1: 1er proceso hijo escribe: %d\n", data->number);
+            printf("COMUNICACION: ITERACIÓN %d: PROGRAMA 1: 1er proceso hijo escribe: %d\n", i, data->number);
             // Se usan los semáforos 0 y 1 para que no se pisen
             // Poner el semáforo 0 en verde
             signal_semaphore(semid, 0);
             // Esperar a que el semáforo 1 esté en verde
             wait_semaphore(semid, 1);
-            printf("COMUNICACION: PROGRAMA 1: 1er proceso hijo lee respuesta: %d\n", data->response);
+            printf("COMUNICACION: ITERACIÓN %d: PROGRAMA 1: 1er proceso hijo lee respuesta: %d\n", i, data->response);
         }
         detach_shared_memory(data);
         exit(0);
@@ -56,9 +56,9 @@ int main(int argc, char *argv[]) {
             for (i = 0; i < vecesSincronizacion; i++) {
                 // Esperar a que el semáforo 4 esté en verde
                 wait_semaphore(semid, 4);
-                printf("COMUNICACION: PROGRAMA 1: 2do proceso hijo lee: %d\n", data->number);
+                printf("COMUNICACION: ITERACIÓN %d: PROGRAMA 1: 2do proceso hijo lee: %d\n", i, data->number);
                 data->response = data->number * 2;
-                printf("COMUNICACION: PROGRAMA 1: 2do proceso hijo escribe respuesta: %d\n", data->response);
+                printf("COMUNICACION: ITERACIÓN %d: PROGRAMA 1: 2do proceso hijo escribe respuesta: %d\n", i, data->response);
                 // Poner el semáforo 5 en verde
                 signal_semaphore(semid, 5);
             }
